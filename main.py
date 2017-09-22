@@ -10,25 +10,26 @@ form = """
 <html>
     <head>
         <style>
-            form {
+            form {{
                 background-color: #eee;
                 padding: 20px;
                 margin: 0 auto;
                 width: 540px;
                 font: 16px sans-serif;
                 border_radius: 10px;
-            }
-            textarea {
+            }}
+            textarea {{
                 margin: 10px 0;
                 width: 540px;
                 height: 120px;
-            }
+            }}
         </style>
     </head>
     <body>
         <form name="secret_maker" method="post">
-            <input type="text" name="rot">
-            <textarea value={secret} name="text"></textarea>
+            <input type="text" name="rot" value=0>
+            <textarea name="text">{secret}</textarea>
+            <input type="submit">
         </form>
     </body>
 </html>
@@ -36,14 +37,15 @@ form = """
 @app.route("/", methods=['POST'])
 def encrypt():
     secret_text = request.form["text"]
-    
-    return secret_text
+    rotation = request.form["rot"]
+    rotation = int(rotation)
+    encrypted = rotate_string(secret_text, rotation)
+    return form.format(secret=encrypted)
 
 @app.route("/")
 
-
 def index():
     
-    return form
+    return form.format(secret=0)
 
 app.run()
